@@ -1,12 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using _Reusable.Singleton;
 using UnityEngine;
 
-public class GameManager : NonPersistentSingleton<GameManager>
+public class CubeMerge : MonoBehaviour
 {
-    public Action CheckAllGridForMatch;
+    // Start is called before the first frame update
     void Start()
     {
         

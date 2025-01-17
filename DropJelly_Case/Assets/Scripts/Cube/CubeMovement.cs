@@ -77,10 +77,10 @@ public class CubeMovement : MonoBehaviour
         transform.DOLocalMove(Vector3.zero, 0.15f*_cubeRaycaster._gridColumnParent.ListCount).SetEase(Ease.OutBounce).OnComplete(
             () =>
             {
-              
+                _cubeRaycaster._gridColumnParent.targetGrid.AssignTempCube(gameObject);
                 CubeManager.Instance.CreateCubeAgain?.Invoke();
             });
-        _cubeRaycaster._gridColumnParent.targetGrid.tempCube = gameObject;
+    
         _cubeRaycaster._gridColumnParent.targetGrid.isEmpty = false;
         StopAll = true;
     }

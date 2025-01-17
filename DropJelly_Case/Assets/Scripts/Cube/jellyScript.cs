@@ -25,7 +25,7 @@ public class jellyScript : MonoBehaviour
 
     void Start()
     {
-        _cubeMovement = GetComponent<CubeMovement>();
+        _cubeMovement = GetComponentInParent<CubeMovement>();
         OriginalMesh = GetComponent<MeshFilter>().sharedMesh;
         MeshClone = Instantiate(OriginalMesh);
         GetComponent<MeshFilter>().sharedMesh = MeshClone;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GridSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,10 +8,12 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private GridSettings gridSettings; // ScriptableObject referansı
     [SerializeField] private GameObject cellPrefab; // Hücre prefab'ını atayacağınız yer
     [SerializeField] private float columnSpacing; // Columnlar arası boşluk
+    [SerializeField] private List<GridCell> _gridRaycasy;
 
     void Start()
     {
         GenerateGrid();
+        GridsFindNeighbors();
     }
 
     void GenerateGrid()
@@ -80,6 +83,7 @@ public class GridGenerator : MonoBehaviour
 
                 // Hücreyi oluştur
                 GameObject cell = Instantiate(cellPrefab, columnObject.transform); // Hücreyi doğru sütuna yerleştir
+                _gridRaycasy.Add(cell.GetComponent<GridCell>());
                 RectTransform cellRectTransform = cell.GetComponent<RectTransform>();
                 if (cellRectTransform == null)
                 {
@@ -92,8 +96,52 @@ public class GridGenerator : MonoBehaviour
                 // Hücre pozisyonunu ayarla
                 cellRectTransform.anchoredPosition = cellPosition;
 
+                // Hücreye ismini satır ve sütun numarasına göre ver
+                cell.name = $"{column},{row}"; // Hücre ismini 0,0 formatında atıyoruz
+
                 cell.transform.parent.GetComponent<GridColumnParent>()
                     .ArrangeGridCellsInColumn(cell.GetComponent<GridStatusCheck>());
+            }
+        }
+    }
+
+    void GridsFindNeighbors()
+    {
+        // Grid hücrelerinin her birini kontrol ediyoruz
+        for (int column = 0; column < gridSettings.columns; column++)
+        {
+            for (int row = 0; row < gridSettings.rows; row++)
+            {
+                // Hücreyi alıyoruz
+                GameObject cellObject = transform.GetChild(column).GetChild(row).gameObject;
+               
+
+                // GridCell referansı
+                GridCell gridCell =  cellObject.GetComponent<GridCell>();
+
+                // Sol komşu
+                if (column > 0) 
+                {
+                    gridCell.leftNeighbor = transform.GetChild(column - 1).GetChild(row).GetComponent<GridStatusCheck>();
+                }
+
+                // Sağ komşu
+                if (column < gridSettings.columns - 1)
+                {
+                    gridCell.rightNeighbor = transform.GetChild(column + 1).GetChild(row).GetComponent<GridStatusCheck>();
+                }
+
+                // Yukarı komşu
+                if (row > 0)
+                {
+                    gridCell.upNeighbor = transform.GetChild(column).GetChild(row - 1).GetComponent<GridStatusCheck>();
+                }
+
+                // Aşağı komşu
+                if (row < gridSettings.rows - 1)
+                {
+                    gridCell.downNeighbor = transform.GetChild(column).GetChild(row + 1).GetComponent<GridStatusCheck>();
+                }
             }
         }
     }
