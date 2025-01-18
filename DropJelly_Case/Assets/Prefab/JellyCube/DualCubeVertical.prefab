@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4863225887176398703}
   - component: {fileID: 4754693570765811688}
   m_Layer: 6
-  m_Name: Cube
+  m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2331a2c0e44cdd24b85f69bfd74ddb92, type: 2}
+  - {fileID: 2100000, guid: b3be995c89ff7554bbc1f342aaef639b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 6880233807901337499}
   - component: {fileID: 7674332764539143807}
   m_Layer: 6
-  m_Name: Cube (1)
+  m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,7 +164,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 632981ea75427954bb0717eb0fbe43b5, type: 2}
+  - {fileID: 2100000, guid: b3be995c89ff7554bbc1f342aaef639b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -304,10 +304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79dcd152456e804f8cd36bd0139e673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topRightObj: {fileID: 6880233807901337499}
-  topLeftObj: {fileID: 4863225887176398703}
-  botRightObj: {fileID: 6880233807901337499}
-  botLeftObj: {fileID: 4863225887176398703}
+  topRightObj: {fileID: 4863225887176398703}
+  topLeftObj: {fileID: 6880233807901337499}
+  botRightObj: {fileID: 4863225887176398703}
+  botLeftObj: {fileID: 6880233807901337499}
   topRight: {r: 1, g: 1, b: 1, a: 1}
   topLeft: {r: 1, g: 1, b: 1, a: 1}
   botRight: {r: 1, g: 1, b: 1, a: 1}

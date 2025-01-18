@@ -14,10 +14,6 @@ public class CubeMovement : MonoBehaviour
     void Start()
     {
         _cubeRaycaster = GetComponent<CubeRaycaster>();
-        // Küpün başlangıç pozisyonunu kaydet
-     
-
-        // Ana kamera referansını al
         mainCamera = Camera.main;
     }
     public void StartPosition()=>   startPosition = transform.position;
@@ -29,37 +25,31 @@ public class CubeMovement : MonoBehaviour
 
         HandleTouchInput();
     }
-
-    // Sürekli hareket için dokunmatik girdiyi işleyin
+    
     void HandleTouchInput()
     {
-        // Eğer ekrana dokunuluyorsa (mobil cihaz) veya fare basılıysa (masaüstü)
         if (Input.touchCount > 0 || Input.GetMouseButton(0))
         {
             Vector3 touchPosition;
             Touch = true;
-            // Mobil için dokunma pozisyonunu al
             if (Input.touchCount > 0)
             {
                 touchPosition = Input.GetTouch(0).position;
             }
-            // Masaüstü için fare pozisyonunu al
             else
             {
                 touchPosition = Input.mousePosition;
             }
-
-            // Dokunma pozisyonunu dünya koordinatlarına dönüştür
             Vector3 worldPosition =
                 mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, mainCamera.nearClipPlane));
-
-            // Küpün pozisyonunu yalnızca X ekseninde güncelle
+            
             transform.position = new Vector3(worldPosition.x, startPosition.y, startPosition.z);
         }
 
         if (Input.GetMouseButtonUp(0) && Touch)
         {
             Touch = false;
+            GameManager.Instance.CheckGridList?.Invoke();
             MoveToNearestEmptyGrid();
         }
     }

@@ -150,8 +150,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a270355e3e6b2fe4780e01d6a3fba271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _MatchParticle: {fileID: 1977108310343075630, guid: e571fbdea8bcf134f9c95e362127ccd3,
+    type: 3}
   isEmpty: 1
   tempCube: {fileID: 0}
+  topRight: {r: 0, g: 0, b: 0, a: 0}
+  topLeft: {r: 0, g: 0, b: 0, a: 0}
+  botRight: {r: 0, g: 0, b: 0, a: 0}
+  botLeft: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &8650433289252797179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,3 +174,7 @@ MonoBehaviour:
   rightNeighbor: {fileID: 0}
   upNeighbor: {fileID: 0}
   downNeighbor: {fileID: 0}
+  topRightObj: {fileID: 0}
+  topLeftObj: {fileID: 0}
+  botRightObj: {fileID: 0}
+  botLeftObj: {fileID: 0}

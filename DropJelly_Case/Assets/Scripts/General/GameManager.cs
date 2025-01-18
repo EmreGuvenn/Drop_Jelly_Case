@@ -7,6 +7,10 @@ using UnityEngine;
 public class GameManager : NonPersistentSingleton<GameManager>
 {
     public Action CheckAllGridForMatch;
+    public Action CubeDestroy;
+    public Action CheckCubeResize;
+    public Action CheckGridList;
+    public Action GridParentsControlUpNeighbour;
     void Start()
     {
         

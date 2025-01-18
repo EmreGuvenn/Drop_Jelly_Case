@@ -657,7 +657,6 @@ MonoBehaviour:
   - {r: 1, g: 0.7019608, b: 0.2784314, a: 1}
   - {r: 0.46666667, g: 0.8666667, b: 1, a: 1}
   - {r: 0.7254902, g: 0.9843137, b: 0.7529412, a: 1}
-  - {r: 1, g: 0.7019608, b: 0.9019608, a: 1}
   - {r: 1, g: 0.96862745, b: 0.4745098, a: 1}
   - {r: 0.83137256, g: 0.64705884, b: 1, a: 1}
   - {r: 1, g: 0.49803922, b: 0.49803922, a: 1}
@@ -905,7 +904,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_TargetDisplay: 0
 --- !u!1001 &1316768811069572639
 PrefabInstance:
