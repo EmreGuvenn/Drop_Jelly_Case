@@ -16,6 +16,12 @@ public class CubeMovement : MonoBehaviour
         _cubeRaycaster = GetComponent<CubeRaycaster>();
         mainCamera = Camera.main;
     }
+
+    public void StopCube()
+    {
+        StopAll = true;
+        StopIT?.Invoke();
+    }
     public void StartPosition()=>   startPosition = transform.position;
     void Update()
     {
@@ -49,6 +55,12 @@ public class CubeMovement : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && Touch)
         {
             Touch = false;
+            GameManager.Instance.MoveCounter--;
+           GameManager.Instance.CountersChange?.Invoke();
+            if (GameManager.Instance.MoveCounter<0)
+            {
+                GameManager.Instance.LevelEnd(false);
+            }
             GameManager.Instance.CheckGridList?.Invoke();
             MoveToNearestEmptyGrid();
         }
@@ -56,11 +68,16 @@ public class CubeMovement : MonoBehaviour
 
     void MoveToNearestEmptyGrid()
     {
-       
+      
         if (_cubeRaycaster._gridColumnParent == null) return;
         StopIT?.Invoke();
         _cubeRaycaster._gridColumnParent.CheckAndAssignTargetGrid();
         _cubeRaycaster._gridColumnParent.tempCube.Add(GetComponent<CubeMovement>());
+        if (_cubeRaycaster._gridColumnParent.StopFail)
+        {
+            enabled = false;
+            return;
+        }
         _target = _cubeRaycaster._gridColumnParent.targetGrid.transform;
         transform.parent = _target;
         LeanTween.delayedCall(gameObject, 0.05f*_cubeRaycaster._gridColumnParent.ListCount, CallFunction);

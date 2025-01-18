@@ -12,7 +12,7 @@ public class CubeManager : NonPersistentSingleton<CubeManager>
     public Action CreateCubeAgain;
     public List<GameObject> cubePrefab; // Küp prefab'ları
     public List<Color> cubeColors; // Küp renkleri
-    private Queue<Color> colorQueue; // Tekrarsız renk sıralaması için kullanılan kuyruk
+    private Queue<Color> colorQueue ; // Tekrarsız renk sıralaması için kullanılan kuyruk
     public GridSettings _GridSettings;
     public Transform gridParent;  // Küplerin yerleşeceği gridin parent'ı
     public float gridSize = 1f;   // Grid boyutu
@@ -30,15 +30,13 @@ public class CubeManager : NonPersistentSingleton<CubeManager>
     {
         CreateCubeAgain -= CreateAgain;
     }
-
-    // Renk kuyruğunu başlatma ve sıfırlama
+    
     private void InitializeColorQueue()
     {
         colorQueue = new Queue<Color>(cubeColors);
-        ShuffleColorQueue(); // Renkleri rastgele sırala
+        ShuffleColorQueue(); 
     }
 
-    // Kuyruğu karıştıran bir yöntem
     private void ShuffleColorQueue()
     {
         List<Color> shuffledColors = new List<Color>(colorQueue);
@@ -56,17 +54,14 @@ public class CubeManager : NonPersistentSingleton<CubeManager>
     {
         GameObject cube = Instantiate(cubePrefab[Random.Range(0, cubePrefab.Count)], pos.position + Vector3.up * 10f, Quaternion.identity, gridParent);
         cube.transform.localScale = Vector3.one * _GridSettings.cellSize;
-
-        // Renk kuyruğunu kontrol et
+        
         if (colorQueue.Count < cube.transform.childCount)
         {
-            InitializeColorQueue(); // Yeterli renk yoksa kuyruğu sıfırla
+            InitializeColorQueue(); 
         }
-
-        // Her child için bir renk ata
+        
         AssignColorsToChildren(cube);
-
-        // Animasyonla düşür
+        
         cube.transform.DOMove(new Vector3(0, cube.transform.position.y - 10f, 0), 0.25f)
             .SetEase(Ease.InBounce)
             .OnComplete(() =>
@@ -76,7 +71,7 @@ public class CubeManager : NonPersistentSingleton<CubeManager>
     }
 
     // Küpe renk atama
-    private void AssignColorsToChildren(GameObject parentCube)
+    public void AssignColorsToChildren(GameObject parentCube)
     {
         List<Transform> children = new List<Transform>();
         foreach (Transform child in parentCube.transform)
@@ -102,4 +97,6 @@ public class CubeManager : NonPersistentSingleton<CubeManager>
             }
         }
     }
+  
+   
 }

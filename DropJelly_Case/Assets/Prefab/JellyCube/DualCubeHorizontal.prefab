@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7457649230168666770}
   - component: {fileID: 4863225887176398703}
   - component: {fileID: 8213295187573416377}
-  - component: {fileID: 3455233188242589590}
+  - component: {fileID: 5732678696321411530}
   m_Layer: 6
   m_Name: Top
   m_TagString: Untagged
@@ -103,7 +103,7 @@ MonoBehaviour:
   damping: 0.45
   rotationIntensity: 1
   rotationResetSpeed: 10
---- !u!114 &3455233188242589590
+--- !u!114 &5732678696321411530
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1356735116372422404}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 341e8a89fcd35954eb80cc0415407ac1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ac7f5092ba2ce04cbf77fd2296cf9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4949420221666615241
@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 7014103474430410374}
   - component: {fileID: 2948480242790703657}
   - component: {fileID: 6894269908461960757}
-  - component: {fileID: 4758012138920164205}
+  - component: {fileID: 2400038226629285100}
   m_Layer: 6
   m_Name: Bot
   m_TagString: Untagged
@@ -218,7 +218,7 @@ MonoBehaviour:
   damping: 0.45
   rotationIntensity: 1
   rotationResetSpeed: 10
---- !u!114 &4758012138920164205
+--- !u!114 &2400038226629285100
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,7 +227,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4949420221666615241}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 341e8a89fcd35954eb80cc0415407ac1, type: 3}
+  m_Script: {fileID: 11500000, guid: 6ac7f5092ba2ce04cbf77fd2296cf9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7530702484928653476

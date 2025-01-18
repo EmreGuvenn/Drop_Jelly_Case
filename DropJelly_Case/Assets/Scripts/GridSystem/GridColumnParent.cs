@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class GridColumnParent : MonoBehaviour
 {
-    [SerializeField] private List<GridStatusCheck> childObject = new List<GridStatusCheck>();
+    public List<GridStatusCheck> childObject = new List<GridStatusCheck>();
     public List<CubeMovement> tempCube = new List<CubeMovement>();
     public GridStatusCheck targetGrid;
     public int ListCount;
@@ -15,7 +15,7 @@ public class GridColumnParent : MonoBehaviour
     public float shakeStrength = 5f;  
     public float shakeDuration = .2f; 
     public int shakeVibrato = 3;
-
+    public bool StopFail = false;
     private void Start()
     {
         GameManager.Instance.CheckGridList+=ClearAndAddedAgain;
@@ -48,6 +48,11 @@ public class GridColumnParent : MonoBehaviour
                 targetGrid = lastGrid;
                 childObject.RemoveAt(childObject.Count - 1);
             }
+        }
+        else
+        {
+            StopFail = true;
+            GameManager.Instance.LevelEnd(false);
         }
 
         ClearAndAddedAgain();

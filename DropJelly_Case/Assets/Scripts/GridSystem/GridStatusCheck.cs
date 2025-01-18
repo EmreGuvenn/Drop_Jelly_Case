@@ -31,12 +31,22 @@ public class GridStatusCheck : MonoBehaviour
         AssignNeighbors();
         GameManager.Instance.CheckAllGridForMatch += CheckNeighborColors;
         GameManager.Instance.CubeDestroy += CheckGridisEmpty;
+        AssignLevelElementCubes();
     }
 
     private void OnDestroy()
     {
         GameManager.Instance.CheckAllGridForMatch -= CheckNeighborColors;
         GameManager.Instance.CubeDestroy -= CheckGridisEmpty;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.LogError("Girdi");
+          
+        }
     }
 
     public void AssignTempCube(GameObject cube)
@@ -167,7 +177,7 @@ public class GridStatusCheck : MonoBehaviour
         if (matchingObjects.Count >= 2)
         {
             AnimateAndDestroy(matchingObjects);
-            Debug.LogError(matchingObjects.Count);
+        
         }
     }
 
@@ -190,7 +200,7 @@ public class GridStatusCheck : MonoBehaviour
 
             obj.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBounce).OnComplete(() =>
             {
-                if (particleInstance == null )
+                if (particleInstance == null)
                 {
                     particleInstance = Instantiate(_MatchParticle, obj.transform.position, Quaternion.identity);
                     var mainModule = particleInstance.main;
@@ -203,15 +213,13 @@ public class GridStatusCheck : MonoBehaviour
 
                     particleInstance.Play();
                 }
-                
+
                 Destroy(obj);
                 GameManager.Instance.CubeDestroy?.Invoke();
             });
         }
 
-      
 
-       
         StartCoroutine(WaitDestroy());
     }
 
@@ -221,16 +229,16 @@ public class GridStatusCheck : MonoBehaviour
         yield return new WaitForSeconds(0.55f);
         if (tempCube != null)
         {
-            if (tempCube.transform.childCount==0)
+            if (tempCube.transform.childCount == 0)
             {
                 GameManager.Instance.CheckGridList?.Invoke();
                 Destroy(tempCube);
             }
         }
+
         yield return new WaitForSeconds(0.1f);
-        if (tempCube==null)
+        if (tempCube == null)
         {
-         
             isEmpty = true;
             topRight = Color.black;
             topLeft = Color.black;
@@ -265,7 +273,7 @@ public class GridStatusCheck : MonoBehaviour
                 upNeighbor.botLeft = Color.black;
                 upNeighbor.isEmpty = true;
                 upNeighbor.tempCube = null;
-                tempCube.transform.SetParent(transform); 
+                tempCube.transform.SetParent(transform);
                 tempCube.transform.DOLocalMove(Vector3.zero,
                     0.05f).SetEase(Ease.OutBounce);
 
@@ -300,7 +308,7 @@ public class GridStatusCheck : MonoBehaviour
 
     public void CheckGridisEmpty()
     {
-        if (tempCube==null)
+        if (tempCube == null)
         {
             isEmpty = true;
             topRight = Color.black;
@@ -310,5 +318,105 @@ public class GridStatusCheck : MonoBehaviour
             GameManager.Instance.CheckGridList?.Invoke();
             StartCoroutine(MoveCubeDownIfEmpty());
         }
+    }
+
+    public void AssignLevelElementCubes()
+    {
+        if (transform.childCount > 0)
+        {
+            tempCube = transform.GetChild(0).gameObject;
+            isEmpty = false;
+            CubeChildsBehaviour temp = tempCube.GetComponent<CubeChildsBehaviour>();
+            GetComponentInParent<GridColumnParent>().tempCube.Add(tempCube.GetComponent<CubeMovement>());
+            cell.topRightObj = temp.topRightObj.gameObject;
+            cell.topLeftObj = temp.topLeftObj.gameObject;
+            cell.botRightObj = temp.botRightObj.gameObject;
+            cell.botLeftObj = temp.botLeftObj.gameObject;
+            topRight =  temp.topRightObj.material.color;
+            topLeft = temp.topLeftObj.material.color;
+            botRight = temp.botRightObj.material.color;
+            botLeft =  temp.botLeftObj.material.color;
+         
+            GameManager.Instance.CheckGridList?.Invoke();
+        
+        }
+    }
+
+    void AssignColors()
+    {
+        Debug.Log("AssignColors function is called.");
+
+        // Renkleri rastgele oluştur
+        Color randomColor1 = GenerateRandomColor();
+        Color randomColor2 = GenerateRandomColor();
+
+        // Sonsuz döngüyü önlemek için deneme sayısını sınırlayalım
+        int maxAttempts = 10;
+        int attempts = 0;
+
+        bool colorsAssigned = false;
+        while (!colorsAssigned && attempts < maxAttempts)
+        {
+            attempts++;
+
+            // Child sayısına göre renk atama
+            if (cell.topRightObj.transform.childCount == 1 && cell.topLeftObj.transform.childCount == 1)
+            {
+                topRight = randomColor1;
+                topLeft = randomColor1;
+            }
+            else
+            {
+                topRight = randomColor1;
+                topLeft = randomColor2;
+            }
+
+            if (cell.botRightObj.transform.childCount == 1 && cell.botLeftObj.transform.childCount == 1)
+            {
+                botRight = randomColor1;
+                botLeft = randomColor1;
+            }
+            else
+            {
+                botRight = randomColor2;
+                botLeft = randomColor2;
+            }
+
+            // Eğer renkler birbirinden farklıysa, atamayı bitir
+            if (topRight != topLeft && topRight != botRight && topRight != botLeft &&
+                topLeft != botRight && topLeft != botLeft && botRight != botLeft)
+            {
+                colorsAssigned = true;
+            }
+            else
+            {
+                // Renkler eşleşiyorsa, yeni renkler üret
+                randomColor1 = GenerateRandomColor();
+                randomColor2 = GenerateRandomColor();
+            }
+        }
+
+        if (!colorsAssigned)
+        {
+            Debug.LogWarning("Renkler eşleşmedi. Max deneme sayısına ulaşıldı.");
+        }
+
+        // Renkleri objelere uygula
+        ApplyColors();
+    }
+
+    void ApplyColors()
+    {
+        cell.topRightObj.GetComponent<Renderer>().material.color = topRight;
+        cell.topLeftObj.GetComponent<Renderer>().material.color = topLeft;
+        cell.botRightObj.GetComponent<Renderer>().material.color = botRight;
+        cell.botLeftObj.GetComponent<Renderer>().material.color = botLeft;
+    }
+
+
+    Color GenerateRandomColor()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, CubeManager.Instance.cubeColors.Count);
+        return CubeManager.Instance.cubeColors[randomIndex];
     }
 }
