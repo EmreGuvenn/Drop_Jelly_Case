@@ -11,6 +11,7 @@ public class CubeMovement : MonoBehaviour
     [SerializeField] private Transform _target;
     private bool StopAll;
     private bool Touch;
+
     void Start()
     {
         _cubeRaycaster = GetComponent<CubeRaycaster>();
@@ -22,7 +23,9 @@ public class CubeMovement : MonoBehaviour
         StopAll = true;
         StopIT?.Invoke();
     }
-    public void StartPosition()=>   startPosition = transform.position;
+
+    public void StartPosition() => startPosition = transform.position;
+
     void Update()
     {
         if (StopAll)
@@ -31,7 +34,7 @@ public class CubeMovement : MonoBehaviour
 
         HandleTouchInput();
     }
-    
+
     void HandleTouchInput()
     {
         if (Input.touchCount > 0 || Input.GetMouseButton(0))
@@ -46,21 +49,24 @@ public class CubeMovement : MonoBehaviour
             {
                 touchPosition = Input.mousePosition;
             }
+
             Vector3 worldPosition =
                 mainCamera.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, mainCamera.nearClipPlane));
-            
+
             transform.position = new Vector3(worldPosition.x, startPosition.y, startPosition.z);
         }
 
         if (Input.GetMouseButtonUp(0) && Touch)
         {
             Touch = false;
-            GameManager.Instance.MoveCounter--;
-           GameManager.Instance.CountersChange?.Invoke();
-            if (GameManager.Instance.MoveCounter<0)
+            if (GameManager.Instance.MoveCounter > 0)
+                GameManager.Instance.MoveCounter--;
+            GameManager.Instance.CountersChange?.Invoke();
+            if (GameManager.Instance.MoveCounter < 0)
             {
                 GameManager.Instance.LevelEnd(false);
             }
+
             GameManager.Instance.CheckGridList?.Invoke();
             MoveToNearestEmptyGrid();
         }
@@ -68,7 +74,6 @@ public class CubeMovement : MonoBehaviour
 
     void MoveToNearestEmptyGrid()
     {
-      
         if (_cubeRaycaster._gridColumnParent == null) return;
         StopIT?.Invoke();
         _cubeRaycaster._gridColumnParent.CheckAndAssignTargetGrid();
@@ -78,18 +83,21 @@ public class CubeMovement : MonoBehaviour
             enabled = false;
             return;
         }
+
         _target = _cubeRaycaster._gridColumnParent.targetGrid.transform;
         transform.parent = _target;
-        LeanTween.delayedCall(gameObject, 0.05f*_cubeRaycaster._gridColumnParent.ListCount, CallFunction);
-        transform.DOLocalMove(Vector3.zero, 0.15f*_cubeRaycaster._gridColumnParent.ListCount).SetEase(Ease.OutBounce).OnComplete(
-            () =>
-            {
-                _cubeRaycaster._gridColumnParent.targetGrid.AssignTempCube(gameObject);
-                CubeManager.Instance.CreateCubeAgain?.Invoke();
-            });
-    
+        LeanTween.delayedCall(gameObject, 0.05f * _cubeRaycaster._gridColumnParent.ListCount, CallFunction);
+        transform.DOLocalMove(Vector3.zero, 0.15f * _cubeRaycaster._gridColumnParent.ListCount).SetEase(Ease.OutBounce)
+            .OnComplete(
+                () =>
+                {
+                    _cubeRaycaster._gridColumnParent.targetGrid.AssignTempCube(gameObject);
+                    CubeManager.Instance.CreateCubeAgain?.Invoke();
+                });
+
         _cubeRaycaster._gridColumnParent.targetGrid.isEmpty = false;
         StopAll = true;
     }
-    void CallFunction()=>  _cubeRaycaster._gridColumnParent.ShakeIt();
+
+    void CallFunction() => _cubeRaycaster._gridColumnParent.ShakeIt();
 }
