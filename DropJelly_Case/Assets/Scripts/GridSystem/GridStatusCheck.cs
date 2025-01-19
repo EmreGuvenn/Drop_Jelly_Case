@@ -97,90 +97,98 @@ public class GridStatusCheck : MonoBehaviour
         }
     }
 
-    void CheckNeighborColors()
+   void CheckNeighborColors()
+{
+    List<GameObject> matchingObjects = new List<GameObject>();
+
+    // Sol komşu kontrolü
+    if (leftNeighbor != null && leftNeighbor.cell.topRightObj != null && cell.topLeftObj != null)
     {
-        List<GameObject> matchingObjects = new List<GameObject>();
-
-        // Sol komşu kontrolü
-        if (leftNeighbor != null && leftNeighbor.cell.topRightObj != null && cell.topLeftObj != null)
+        // topRight ile topLeft kontrolü
+        if (AreColorsSimilar(leftNeighbor.topRight, topLeft))
         {
-            // topRight ile topLeft kontrolü
-            if (leftNeighbor.topRight == topLeft)
-            {
-                matchingObjects.Add(leftNeighbor.cell.topRightObj);
-                matchingObjects.Add(cell.topLeftObj);
-            }
-
-            // botRight ile botLeft kontrolü
-            if (leftNeighbor.botRight == botLeft && leftNeighbor.cell.botRightObj != null && cell.botLeftObj != null)
-            {
-                matchingObjects.Add(leftNeighbor.cell.botRightObj);
-                matchingObjects.Add(cell.botLeftObj);
-            }
+            matchingObjects.Add(leftNeighbor.cell.topRightObj);
+            matchingObjects.Add(cell.topLeftObj);
         }
 
-        // Sağ komşu kontrolü
-        if (rightNeighbor != null && rightNeighbor.cell.topLeftObj != null && cell.topRightObj != null)
+        // botRight ile botLeft kontrolü
+        if (AreColorsSimilar(leftNeighbor.botRight, botLeft) && leftNeighbor.cell.botRightObj != null && cell.botLeftObj != null)
         {
-            // topLeft ile topRight kontrolü
-            if (rightNeighbor.topLeft == topRight)
-            {
-                matchingObjects.Add(rightNeighbor.cell.topLeftObj);
-                matchingObjects.Add(cell.topRightObj);
-            }
-
-            // botLeft ile botRight kontrolü
-            if (rightNeighbor.botLeft == botRight && rightNeighbor.cell.botLeftObj != null && cell.botRightObj != null)
-            {
-                matchingObjects.Add(rightNeighbor.cell.botLeftObj);
-                matchingObjects.Add(cell.botRightObj);
-            }
-        }
-
-        // Üst komşu kontrolü
-        if (upNeighbor != null && upNeighbor.cell.botLeftObj != null && cell.topLeftObj != null)
-        {
-            // botLeft ile topLeft kontrolü
-            if (upNeighbor.botLeft == topLeft)
-            {
-                matchingObjects.Add(upNeighbor.cell.botLeftObj);
-                matchingObjects.Add(cell.topLeftObj);
-            }
-
-            // botRight ile topRight kontrolü
-            if (upNeighbor.botRight == topRight && upNeighbor.cell.botRightObj != null && cell.topRightObj != null)
-            {
-                matchingObjects.Add(upNeighbor.cell.botRightObj);
-                matchingObjects.Add(cell.topRightObj);
-            }
-        }
-
-        // Alt komşu kontrolü
-        if (downNeighbor != null && downNeighbor.cell.topLeftObj != null && cell.botLeftObj != null)
-        {
-            // topLeft ile botLeft kontrolü
-            if (downNeighbor.topLeft == botLeft)
-            {
-                matchingObjects.Add(downNeighbor.cell.topLeftObj);
-                matchingObjects.Add(cell.botLeftObj);
-            }
-
-            // topRight ile botRight kontrolü
-            if (downNeighbor.topRight == botRight && downNeighbor.cell.topRightObj != null && cell.botRightObj != null)
-            {
-                matchingObjects.Add(downNeighbor.cell.topRightObj);
-                matchingObjects.Add(cell.botRightObj);
-            }
-        }
-
-        // Eşleşen nesneleri yok et
-        if (matchingObjects.Count >= 2)
-        {
-            AnimateAndDestroy(matchingObjects);
-        
+            matchingObjects.Add(leftNeighbor.cell.botRightObj);
+            matchingObjects.Add(cell.botLeftObj);
         }
     }
 
+    // Sağ komşu kontrolü
+    if (rightNeighbor != null && rightNeighbor.cell.topLeftObj != null && cell.topRightObj != null)
+    {
+        // topLeft ile topRight kontrolü
+        if (AreColorsSimilar(rightNeighbor.topLeft, topRight))
+        {
+            matchingObjects.Add(rightNeighbor.cell.topLeftObj);
+            matchingObjects.Add(cell.topRightObj);
+        }
+
+        // botLeft ile botRight kontrolü
+        if (AreColorsSimilar(rightNeighbor.botLeft, botRight) && rightNeighbor.cell.botLeftObj != null && cell.botRightObj != null)
+        {
+            matchingObjects.Add(rightNeighbor.cell.botLeftObj);
+            matchingObjects.Add(cell.botRightObj);
+        }
+    }
+
+    // Üst komşu kontrolü
+    if (upNeighbor != null && upNeighbor.cell.botLeftObj != null && cell.topLeftObj != null)
+    {
+        // botLeft ile topLeft kontrolü
+        if (AreColorsSimilar(upNeighbor.botLeft, topLeft))
+        {
+            matchingObjects.Add(upNeighbor.cell.botLeftObj);
+            matchingObjects.Add(cell.topLeftObj);
+        }
+
+        // botRight ile topRight kontrolü
+        if (AreColorsSimilar(upNeighbor.botRight, topRight) && upNeighbor.cell.botRightObj != null && cell.topRightObj != null)
+        {
+            matchingObjects.Add(upNeighbor.cell.botRightObj);
+            matchingObjects.Add(cell.topRightObj);
+        }
+    }
+
+    // Alt komşu kontrolü
+    if (downNeighbor != null && downNeighbor.cell.topLeftObj != null && cell.botLeftObj != null)
+    {
+        // topLeft ile botLeft kontrolü
+        if (AreColorsSimilar(downNeighbor.topLeft, botLeft))
+        {
+            matchingObjects.Add(downNeighbor.cell.topLeftObj);
+            matchingObjects.Add(cell.botLeftObj);
+        }
+
+        // topRight ile botRight kontrolü
+        if (AreColorsSimilar(downNeighbor.topRight, botRight) && downNeighbor.cell.topRightObj != null && cell.botRightObj != null)
+        {
+            matchingObjects.Add(downNeighbor.cell.topRightObj);
+            matchingObjects.Add(cell.botRightObj);
+        }
+    }
+
+    // Eşleşen nesneleri yok et
+    if (matchingObjects.Count >= 2)
+    {
+        AnimateAndDestroy(matchingObjects);
+    }
+}
+    private bool AreColorsSimilar(Color color1, Color color2, float threshold = 0.1f)
+    {
+        // RGB bileşenlerinin farklarını hesapla
+        float rDifference = Mathf.Abs(color1.r - color2.r);
+        float gDifference = Mathf.Abs(color1.g - color2.g);
+        float bDifference = Mathf.Abs(color1.b - color2.b);
+
+        // Eğer farklar eşik değerinden küçükse, renkler benzer kabul edilir
+        return rDifference < threshold && gDifference < threshold && bDifference < threshold;
+    }
 
     void AnimateAndDestroy(List<GameObject> objects)
     {
@@ -325,6 +333,9 @@ public class GridStatusCheck : MonoBehaviour
         if (transform.childCount > 0)
         {
             tempCube = transform.GetChild(0).gameObject;
+            tempCube.GetComponent<CubeMovement>()._target = transform;
+            tempCube.GetComponent<CubeRaycaster>()._gridColumnParent =
+                transform.parent.GetComponent<GridColumnParent>();
             isEmpty = false;
             CubeChildsBehaviour temp = tempCube.GetComponent<CubeChildsBehaviour>();
             GetComponentInParent<GridColumnParent>().tempCube.Add(tempCube.GetComponent<CubeMovement>());
@@ -338,7 +349,7 @@ public class GridStatusCheck : MonoBehaviour
             botLeft =  temp.botLeftObj.material.color;
          
             GameManager.Instance.CheckGridList?.Invoke();
-        
+            GameManager.Instance.GridParentsControlUpNeighbour?.Invoke();
         }
     }
 

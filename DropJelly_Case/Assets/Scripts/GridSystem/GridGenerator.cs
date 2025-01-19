@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Reusable.GameData;
 using GridSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -156,90 +157,69 @@ public class GridGenerator : MonoBehaviour
         }
     }
 
-   void GenerateBottomCubes()
-{
-    int startRow = gridSettings.rows - 1; // TODO: Level Scriptable'dan çekilecek.
-    for (int column = 0; column < gridSettings.columns; column += 2)
+    void GenerateBottomCubes()
     {
-        for (int row = startRow; row < gridSettings.rows; row++)
+        // GridLevel'dan dolu hücrelerin olduğu listeyi alıyoruz
+        GridLevel gridLevel = LevelManager.Instance.allLevels[SaveData.LevelCount]._gridLevel;
+        if (gridLevel == null)
         {
-            Transform cellTransform = transform.GetChild(column).GetChild(row);
-            GameObject randomCubePrefab =
-                CubeManager.Instance.cubePrefab[Random.Range(0, CubeManager.Instance.cubePrefab.Count)];
-            GameObject cube = Instantiate(randomCubePrefab, cellTransform.position, Quaternion.identity, cellTransform);
-            cube.GetComponent<CubeMovement>().StopCube();
-            
-            List<Color> tempColors = new List<Color>(availableColors);
-            RemoveNeighborColors(column, row, tempColors);
-            if (tempColors.Count < 1)
+            Debug.LogError("GridLevel bulunamadı!");
+            return;
+        }
+
+        // GridLevel'deki hücrelere bakarak prefab yerleştiriyoruz
+        for (int i = 0; i < gridLevel.cells.Count; i++)
+        {
+            GridLevel.GridCell gridCell = gridLevel.cells[i];
+
+            if (gridCell.prefab != null) // Prefab varsa
             {
-                tempColors = new List<Color>(availableColors);
-                RemoveNeighborColors(column, row, tempColors);
-            }
-            foreach (Transform child in cube.transform)
-            {
+                int column = i % 6; // 6x6 grid için sütun hesaplama
+                int row = i / 6; // Satır hesaplama
+
+                Transform cellTransform = transform.GetChild(column).GetChild(row);
+
+                // Prefab'ı seçiyoruz
+                GameObject prefab = gridCell.prefab;
+
+                // Prefab'ı hücreye yerleştiriyoruz
+                GameObject cube = Instantiate(prefab, cellTransform.position, Quaternion.identity, cellTransform);
+                cube.GetComponent<CubeMovement>().StopCube();
+                cube.GetComponent<CubeRaycaster>().Stop();
+                // Renklerin yönetimi
+                List<Color> tempColors = new List<Color>(gridCell.childColors);
                 if (tempColors.Count == 0)
                 {
-                    break;
+                    tempColors = new List<Color>(availableColors);
                 }
 
-                // Listeden rastgele bir renk seç.
-                int randomIndex = Random.Range(0, tempColors.Count);
-                Color randomColor = tempColors[randomIndex];
+                // Cube'un çocuk objelerine renk atıyoruz
+                int colorIndex = 0; // Renklerin sırasıyla atanması için index oluşturuyoruz
 
-                // Rengi child'ın materyaline uygula.
-                Renderer childRenderer = child.GetComponent<Renderer>();
-                if (childRenderer != null)
+                foreach (Transform child in cube.transform)
                 {
-                    childRenderer.material.color = randomColor;
+                    if (colorIndex >= tempColors.Count) // Eğer renkler bittiğinde çıkılacak
+                    {
+                        break;
+                    }
+
+                    // Listeden sırayla renk seç
+                    Color currentColor = tempColors[colorIndex];
+
+                    // Rengi child'ın materyaline uygula
+                    Renderer childRenderer = child.GetComponent<Renderer>();
+                    if (childRenderer != null)
+                    {
+                        childRenderer.material.color = currentColor;
+                    }
+
+                    // Renk index'ini bir artırıyoruz
+                    colorIndex++;
                 }
 
-                // Seçilen rengi listeden kaldır.
-                tempColors.RemoveAt(randomIndex);
-            }
-
-            // Cube'ün boyutunu ayarla ve adını değiştir.
-            cube.transform.localScale = Vector3.one * gridSettings.cellSize;
-            cube.name = $"Cube_{column}_{row}";
-        }
-    }
-}
-
-
-    void RemoveNeighborColors(int column, int row, List<Color> tempColors)
-    {
-        // Çevredeki hücreleri kontrol et (komşu ve çevre hücreleri dahil)
-        for (int i = -1; i <= 1; i++) // Satır
-        {
-            for (int j = -1; j <= 1; j++) // Sütun
-            {
-                if (i == 0 && j == 0) continue; // Kendisi değil
-
-                int checkColumn = column + j;
-                int checkRow = row + i;
-
-                if (checkColumn >= 0 && checkColumn < gridSettings.columns && checkRow >= 0 &&
-                    checkRow < gridSettings.rows)
-                {
-                    CheckAndRemoveColor(checkColumn, checkRow, tempColors);
-                }
-            }
-        }
-    }
-
-    void CheckAndRemoveColor(int column, int row, List<Color> tempColors)
-    {
-        if (column < 0 || column >= gridSettings.columns || row < 0 || row >= gridSettings.rows)
-            return;
-
-        Transform neighborCell = transform.GetChild(column).GetChild(row);
-        if (neighborCell.childCount > 0)
-        {
-            Renderer neighborRenderer = neighborCell.GetChild(0).GetComponent<Renderer>();
-            if (neighborRenderer != null)
-            {
-                Color neighborColor = neighborRenderer.material.color;
-                tempColors.Remove(neighborColor);
+                // Cube'ün boyutunu ayarla
+                cube.transform.localScale = Vector3.one * gridSettings.cellSize;
+              
             }
         }
     }

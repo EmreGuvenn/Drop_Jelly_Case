@@ -8,7 +8,7 @@ public class CubeMovement : MonoBehaviour
     private Vector3 startPosition; // Küpün başlangıç pozisyonu
     private Camera mainCamera; // Ana kamera referansı
     private CubeRaycaster _cubeRaycaster;
-    [SerializeField] private Transform _target;
+    public Transform _target;
     private bool StopAll;
     private bool Touch;
 
@@ -62,7 +62,7 @@ public class CubeMovement : MonoBehaviour
             if (GameManager.Instance.MoveCounter > 0)
                 GameManager.Instance.MoveCounter--;
             GameManager.Instance.CountersChange?.Invoke();
-            if (GameManager.Instance.MoveCounter < 0)
+            if (GameManager.Instance.MoveCounter <= 0)
             {
                 GameManager.Instance.LevelEnd(false);
             }
@@ -72,7 +72,7 @@ public class CubeMovement : MonoBehaviour
         }
     }
 
-    void MoveToNearestEmptyGrid()
+    public void MoveToNearestEmptyGrid()
     {
         if (_cubeRaycaster._gridColumnParent == null) return;
         StopIT?.Invoke();

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85e561c831f9d474cba27af5f2f584b7, type: 3}
   m_Name: Sample_Level_1
   m_EditorClassIdentifier: 
+  _gridLevel: {fileID: 11400000, guid: ffa8858769de2e3439f42e1a1b2a1850, type: 2}
   levelIndex: 0
   MoveCount: 20
   GoalCount: 30

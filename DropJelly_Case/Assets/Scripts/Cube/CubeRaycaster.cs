@@ -23,7 +23,7 @@ public class CubeRaycaster : MonoBehaviour
 
     }
 
-    void Stop() => stop = true;
+   public void Stop() => stop = true;
     void Update()
     {
         if (stop)

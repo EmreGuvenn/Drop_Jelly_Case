@@ -46,7 +46,7 @@ public class jellyScript : MonoBehaviour
     void Stop()
     {
         movementComplated = true;
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        transform.rotation = Quaternion.Euler(8, 0, 0);
     }
     private void FixedUpdate()
     {
